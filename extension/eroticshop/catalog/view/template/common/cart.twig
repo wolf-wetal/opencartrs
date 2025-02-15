@@ -1,0 +1,95 @@
+<div class="dropdown d-grid">
+<button id="header_cart_btn" type="button" data-bs-toggle="dropdown" class="header-cart__btn dropdown-toggle cart" data-count="2">
+{#  <i class="cart" style="font-size: 45px"></i>#}
+  <span id="cart-total" class="header-cart__total-items">{{ items }}</span>
+</button>
+<ul id="cart_dropdown" class="header-cart__dropdown dropdown-menu dropdown-menu-end p-2">
+{% if products or vouchers %}
+  <li>
+    <table class="table table-striped mb-2">
+      {% for product in products %}
+        <tr class="header-cart__item">
+          <td class="header-cart__image  text-center">{% if product.thumb %}<a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-thumbnail"/></a>{% endif %}</td>
+          <td class="header-cart__name text-start"><a href="{{ product.href }}">{{ product.name }}</a>
+            {% if product.option %}
+              {% for option in product.option %}
+                <br/>
+                <small> - {{ option.name }}: {{ option.value }}</small>
+              {% endfor %}
+            {% endif %}
+            {% if product.reward %}
+              <br/>
+              <small> - {{ text_points }}: {{ product.reward }}</small>
+            {% endif %}
+            {% if product.subscription %}
+              <br/>
+              <small> - {{ text_subscription }}: {{ product.subscription }}</small>
+            {% endif %}
+          </td>
+          <td class="header-cart__quantity text-end">x {{ product.quantity }}</td>
+            {% if product.total_discounts %}
+                <td class="header-cart__total text-end ">{{ product.total_discounts }}</td>
+            {% else %}
+                <td class="header-cart__total text-end ">{{ product.total }}</td>
+            {% endif %}
+
+          <td class="header-cart__remove text-end ">
+
+            <form class="header-cart__remove-form" action="{{ product_remove }}" method="post" data-oc-toggle="ajax" data-oc-load="{{ list }}" data-oc-target="#header-cart">
+              <input type="hidden" name="key" value="{{ product.cart_id }}">
+              <button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}" class="header-cart__remove-btn btn btn-danger"><i class="x-symbol"></i></button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+
+      {% for voucher in vouchers %}
+        <tr>
+          <td class="text-center"></td>
+          <td class="text-start">{{ voucher.description }}</td>
+          <td class="text-end">x&nbsp;1</td>
+          <td class="text-end">{{ voucher.amount }}</td>
+          <td class="text-end">
+            <form action="{{ voucher_remove }}" method="post" data-oc-toggle="ajax" data-oc-load="{{ list }}" data-oc-target="#header-cart">
+              <input type="hidden" name="key" value="{{ voucher.key }}"/>
+              <button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa-solid fa-circle-xmark"></i></button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+
+    </table>
+
+    <div>
+      <table class="table table-sm table-bordered mb-2">
+        {% for total in totals %}
+          <tr class="header-cart__totals-item">
+            <td class="text-end"><strong>{{ total.title }}</strong>:&nbsp</td>
+            <td class="text-end">{{ total.text }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+      <p class="text-end"><a href="{{ cart }}"><strong><i class="fa-solid fa-cart-shopping"></i> {{ text_cart }}</strong></a>&nbsp;&nbsp;&nbsp;<a href="{{ checkout }}"><strong><i class="fa-solid fa-share"></i> {{ text_checkout }}</strong></a></p>
+    </div>
+  </li>
+{% else %}
+  <li class="text-center p-4">{{ text_no_results }}</li>
+{% endif %}
+</ul>
+</div>
+<script type="text/javascript">
+//Show Cart
+$('#header_cart_btn').on('click', function() {
+    $('.header form').removeClass('opened');
+    const dropdownMenu = $('#cart_dropdown');
+    // Проверяем, открыто ли dropdown меню
+    const isOpen = dropdownMenu.css('display') === 'block';
+
+    // Если меню открыто, закрываем его, иначе открываем
+    if (isOpen) {
+        dropdownMenu.css('display', 'none');
+    } else {
+        dropdownMenu.css('display', 'block');
+    }
+});
+</script>

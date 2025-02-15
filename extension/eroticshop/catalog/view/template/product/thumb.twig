@@ -1,0 +1,37 @@
+<div class="item">
+    <a href="{{ href }}">
+        <div class="image">
+            <img src="{{ thumb }}" alt="{{ name }}" title="{{ name }}">
+        </div>
+        <div class="name truncate">
+            {{ name }}
+        </div>
+    </a>
+    {% if price %}
+        {% if special %}
+            <div class="flex">
+                <div class="price div-price">
+                    <span class="price-old">{{ price }}</span>
+                    <div class="price-new">
+                        {{ special }}
+                    </div>
+                </div>
+                <form method="post" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#header-cart">
+                    <button class="addToCartButton" type="submit" formaction="{{ add_to_cart }}" name="product_{{ product_id }}"  data-bs-toggle="tooltip" data-name="{{ name }}" data-image="{{ thumb }}" data-sku="{{ sku }}">В корзину</button>
+                    <input type="hidden" name="product_id" value="{{ product_id }}"/> <input type="hidden" name="quantity" value="1"/>
+                </form>
+            </div>
+        {% else %}
+            <div class="flex">
+               <div class="price">
+                    {{ price }}
+                </div>
+                <form method="post" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#header-cart">
+                    <button class="addToCartButton" type="submit" formaction="{{ add_to_cart }}" name="product_{{ product_id }}"  data-bs-toggle="tooltip" data-name="{{ name }}" data-image="{{ thumb }}" data-sku="{{ sku }}">В корзину</button>
+                    <input type="hidden" name="product_id" value="{{ product_id }}"/> <input type="hidden" name="quantity" value="1"/>
+                </form>
+
+            </div>
+        {% endif %}
+    {% endif %}
+</div>

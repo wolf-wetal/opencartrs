@@ -1,0 +1,149 @@
+
+<div id="custom-shipping">
+{% if (shipping_methods) %}
+  <div id="custom-shipping-address">
+
+    <div id="shipping-new" style="display: {{ addresses ? 'none' : 'block' }};">
+
+      {% for field in setting['fields'] %}
+
+        {% if (field['name'] == 'address_1') %}
+          <div class="form-group" id="shipping-field-address-1">
+            <label class="control-label" for="input-shipping-address-1"></label>
+            <input type="text" name="address_1" value="{{ address_1 }}" placeholder="{{ entry_address_1 }}" id="input-shipping-address-1" class="form-control" />
+          </div>
+        {% endif %}
+
+        {% if (field['name'] == 'city') %}
+          <div class="form-group" id="shipping-field-city">
+            <label class="control-label" for="input-shipping-city"></label>
+            <input type="text" name="city" value="{{ city }}" placeholder="{{ entry_city }}" id="input-shipping-city" class="form-control" />
+          </div>
+        {% endif %}
+
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+<div class="br"></div>
+  <h3>Выберите способ доставки</h3>
+
+    {% if (error_warning) %} 
+    <div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+    {% endif %}
+
+    {% if (shipping_methods) %}
+
+      <div id="custom-shipping-methods" class="select">
+      {% for shipping_method in shipping_methods %} 
+
+        {% if (not shipping_method['error']) %} 
+          {% for quote in shipping_method['quote'] %}
+
+
+                {% if (quote['code'] == code or not code) %} 
+                {% set code = quote['code'] %} 
+                <input type="radio" class="radio" id="{{ quote['code'] }}" name="shipping_method" value="{{ quote['code'] }}" checked="checked" />
+                {% else %} 
+                <input type="radio" class="radio" id="{{ quote['code'] }}" name="shipping_method" value="{{ quote['code'] }}" />
+                {% endif %}
+
+            {% if (quote['code'] == 'pickup.pickup') %}
+            <label for="{{ quote['code'] }}">
+              <span>Самовывоз</span>
+              Адрес магазина: Суеркулова 28/2 (бывшая Донецкая) в цокольном помещении бизнес-центра "Колизей" Режим работы: 10:00-21:00 ежедневно, без выходных.
+            </label>
+            {% elseif (quote['code'] == 'flat.flat') %}
+            <label for="{{ quote['code'] }}">
+                  <span>Доставка</span>
+                  Не включена в итоговую сумму
+            </label>
+            {% endif %}
+
+          {% endfor %} 
+        {% else %} 
+          <div class="alert alert-danger">{{ shipping_method['error'] }}</div>
+        {% endif %} 
+      {% endfor %} 
+      </div>
+
+    {% endif %}
+</div>
+  </div>
+  </div>
+
+<script><!--
+$('#custom-shipping [name^=shipping]').on('input', function() {
+  $(this).parent().find('.text-danger').remove();
+  $(this).parent().removeClass('has-error');
+});
+//--></script>
+
+<script><!--
+$('#custom-shipping input[name=\'shipping_address\']').on('change', function() {
+  if ( $(this).val() === 'new' ){
+    $('#shipping-new').show();
+  } else {
+    $('#shipping-new').hide();
+  }
+});
+//--></script>
+
+<script><!--
+$('#custom-shipping input[name=\'shipping_method\']').on('change', function() {
+
+  $('.alert, .text-danger').remove();
+  $('.has-error').removeClass('has-error');
+
+  // Custom (inbox)
+  custom_block.shipping(this.value);
+
+});
+
+$('#custom-shipping input[name=\'shipping_method\']:checked').trigger('change');
+//--></script>
+
+<script><!--
+$('#custom-shipping select[name=\'country_id\']').on('change', function() {
+  $.ajax({
+    url: 'index.php?route=checkout/checkout/country&country_id=' + this.value,
+    dataType: 'json',
+    beforeSend: function() {
+      $('#custom-shipping select[name=\'country_id\']').after(' <i class="fa fa-circle-o-notch fa-spin"></i>');
+    },
+    complete: function() {
+      $('.fa-spin').remove();
+    },
+    success: function(json) {
+      if (json['postcode_required'] == '1') {
+        $('#custom-shipping input[name=\'postcode\']').parent().parent().addClass('required');
+      } else {
+        $('#custom-shipping input[name=\'postcode\']').parent().parent().removeClass('required');
+      }
+
+      html = '<option value="">{{ text_select }}</option>';
+
+      if (json['zone'] && json['zone'] != '') {
+        for (i = 0; i < json['zone'].length; i++) {
+          html += '<option value="' + json['zone'][i]['zone_id'] + '"';
+
+          if (json['zone'][i]['zone_id'] == '{{ zone_id }}') {
+            html += ' selected="selected"';
+          }
+
+          html += '>' + json['zone'][i]['name'] + '</option>';
+        }
+      } else {
+        html += '<option value="0" selected="selected">{{ text_none }}</option>';
+      }
+
+      $('#custom-shipping select[name=\'zone_id\']').html(html);
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+
+$('#custom-shipping select[name=\'country_id\']').trigger('change');
+//--></script>

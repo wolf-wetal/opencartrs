@@ -1,0 +1,60 @@
+{{ header }}
+<div id="account-forgotten" class="navi">
+    <div class="wrap">
+        {% for breadcrumb in breadcrumbs %}
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+            {% if not loop.last %}<span></span>{% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<div id="checkout-cart" class="order-page">
+    <div class="wrap">
+        <h1>{{ heading_title }}</h1>
+        <div id="shopping-cart">{{ list }}</div>
+
+        {% if modules %}
+{#            <h3>{{ text_next }}</h3>#}
+{#            <p>{{ text_next_choice }}</p>#}
+            <div class="panel-group" id="accordion"> {% for module in modules %}
+                    {{ module }}
+                {% endfor %} </div>
+        {% endif %}
+
+    </div>
+</div>
+<script type="text/javascript"><!--
+    $('#shopping-cart').on('submit', 'form', function (e) {
+        e.preventDefault();
+
+        var element = this;
+
+        if (e.originalEvent !== undefined && e.originalEvent.submitter !== undefined) {
+            var button = e.originalEvent.submitter;
+        } else {
+            var button = '';
+        }
+
+
+        $.ajax({
+            url: $(button).attr('formaction'),
+            type: 'post',
+            data: $(element).serialize(),
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+
+                if (json['redirect']) {
+                    location = json['redirect'];
+                }
+                $('#shopping-cart').load('index.php?route=checkout/cart.list&language={{ language }}', {}, function () {
+                    $('#header-cart').load('index.php?route=common/cart.info&language={{ language }}');
+                });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    });
+    //--></script>
+{{ footer }}

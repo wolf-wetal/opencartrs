@@ -1,0 +1,155 @@
+<footer class="footer">
+    <div class="wrap flex">
+        <div class="logo">
+            <a href="{{ home }}"><img src="/extension/eroticshop/catalog/view/img/logo.svg"></a>
+        </div>
+        <ul>
+            <li><a href="{{ home }}">Главная</a></li>
+            <li><a href="{{ url_eroticheskoe_bele }}">Эротическое белье</a></li>
+            <li><a href="{{ url_seks_igrushki_bishkek }}">Секс игрушки</a></li>
+            <li><a href="{{ url_aksessuary }}">Аксессуары</a></li>
+            <li><a href="{{ url_cosmetics_accessories }}">Косметика</a></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_bdsm }}">БДСМ</a></li>
+            <li><a href="{{ url_wiagra_bady_preparaty }}">Возбудители</a></li>
+            <li><a href="#">Скидки</a></li>
+            <li><a href="#">Отзывы</a></li>
+        </ul>
+        <div class="contacts">
+            <p>Позвонить по телефону:</p>
+            <div class="phones">
+                <a href="tel:+996555060900" target="_blank">0 (555) 06 09 90</a>
+                <a href="tel:+996501060900" target="_blank">0(501) 06 09 00</a>
+            </div>
+            <div class="inst">
+                <a href="https://www.instagram.com/eroticshopkg/" target="_blank">@eroticshopkg</a>
+                <a href="https://www.instagram.com/eroticshop_kg/" target="_blank">@eroticshop_kg</a>
+            </div>
+        </div>
+    </div>
+</footer>
+{{ cookie }}
+<script type="text/javascript">
+    var live_search = {
+        selector: '#search input[name=\'search\']',
+        text_no_matches: 'Ничего не найдено',
+        height: '50px',
+        current_page: 1,
+        total_pages: 1
+    };
+
+    $(document).ready(function() {
+        var html = '';
+        html += '<div class="live-search" style="display: none">';
+        html += '	<ul>';
+        html += '	</ul>';
+        html += '  <div class="result-text" style="display: none"></div>';
+        html += '  <button class="show-more" style="display: none">Показать еще</button>';
+        html += '</div>';
+
+        $(live_search.selector).after(html);
+
+        function loadResults(page) {
+            var filter_name = $(live_search.selector).val();
+            var cat_id = 0;
+
+            if (filter_name.length < 2) {
+                $('.live-search').css('display', 'none');
+                $('body').removeClass('search-open');
+            } else {
+                var html = '';
+                html += '<li style="text-align: center;height:10px;">';
+                html += '<div id="loading-indicator" class="loading-indicator" style="display: block;">';
+                html += '<div class="spinner"></div>Загрузка...</div>';
+                html += '</li>';
+                $('.live-search ul').html(html);
+                $('.live-search').css('display', 'block');
+                $('body').addClass('search-open');
+
+                $.ajax({
+                    url: 'index.php?route=product/live_search&filter_search=' + encodeURIComponent(filter_name) + '&page=' + page,
+                    dataType: 'json',
+                    success: function(result) {
+                        var products = result.products;
+                        live_search.total_pages = result.total_pages;
+
+                        if (!$.isEmptyObject(products)) {
+                            if (page === 1) {
+                                $('.live-search ul li').remove();
+                                $('.result-text').css('display', 'block');
+                                $('.result-text').html('<a href="{{ module_live_search_href }}' + filter_name + '" class="view-all-results">Показать все (' + result.total + ')</a>');
+                            }
+
+                            $.each(products, function(index, product) {
+                                var html = '';
+
+                                html += '<li>';
+                                html += '<a href="' + product.url + '.html" title="' + product.name + '">';
+                                html += '	<div class="product-image col-sm-3 col-xs-4"><img alt="' + product.name + '" src="' + product.image + '"></div>';
+                                html += '<div class="search-description col-sm-9 col-xs-8">';
+                                html += '	<div class="product-name">' + product.name;
+                                html += '<p>' + product.extra_info + '</p>';
+                                html += '</div>';
+
+                                if (product.special) {
+                                    html += '	<div class="product-price"><span class="price">' + product.special + '</span><span class="special">' + product.price + '</span></div>';
+                                } else {
+                                    html += '	<div class="product-price"><span class="price">' + product.price + '</span></div>';
+                                }
+
+                                html += '</div>';
+                                html += '<span style="clear:both"></span>';
+                                html += '</a>';
+                                html += '</li>';
+                                $('.live-search ul').append(html);
+                            });
+
+                            if (live_search.current_page < live_search.total_pages) {
+                                $('.show-more').css('display', 'block');
+                            } else {
+                                $('.show-more').css('display', 'none');
+                            }
+                        } else {
+                            var html = '';
+                            html += '<li style="text-align: center;height:40px; margin-top: 20px" >';
+                            html += live_search.text_no_matches;
+                            html += '</li>';
+                            $('.live-search ul').html(html);
+                            $('.show-more').css('display', 'none');
+                        }
+
+                        $('.live-search').css('display', 'block');
+                        $('body').addClass('search-open');
+                        return false;
+                    }
+                });
+            }
+        }
+
+        $(live_search.selector).autocomplete({
+            'source': function(request, response) {
+                live_search.current_page = 1;
+                loadResults(live_search.current_page);
+            },
+            'select': function(product) {
+                $(live_search.selector).val(product.name);
+            }
+        });
+
+        $(document).on('click', '.show-more', function() {
+            live_search.current_page++;
+            loadResults(live_search.current_page);
+        });
+
+        $(document).bind("mouseup touchend", function(e) {
+            var container = $('.live-search');
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                container.hide();
+            }
+        });
+    });
+</script>
+
+
+</body></html>

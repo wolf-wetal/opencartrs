@@ -1,0 +1,36 @@
+<div class="index-catalog-block pb">
+    <div class="wrap">
+        <div class="flex-old">
+            <h2>Скидки</h2>
+            <a href="{{ url_skidki }}" class="top-link other">Смотреть все</a>
+        </div>
+        <div class="list other">
+            {% for product in products %}
+            <div class="item2">
+                <a href="{{ product.href }}">
+                    <div class="image">
+                        <img src="{{ product.thumb }}">
+                    </div>
+                </a>
+                <div class="flex">
+                    <div class="name">
+                        <span>{{ product.name }}</span>
+                    </div>
+                    <div class="price">
+                        <span class="old">{{ product.price }}</span>
+                        <div class="new">
+                            {{ product.special }}
+                        </div>
+                    </div>
+
+
+                    <form method="post" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#header-cart">
+                        <button class="addToCartButton" type="submit" formaction="{{ add_to_cart }}" name="product_{{ product.product_id }}"  data-bs-toggle="tooltip" data-name="{{ product.name }}" data-image="{{ product.thumb }}" data-sku="{{ product.sku }}">В корзину</button>
+                        <input type="hidden" name="product_id" value="{{ product.product_id }}"/> <input type="hidden" name="quantity" value="1"/>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

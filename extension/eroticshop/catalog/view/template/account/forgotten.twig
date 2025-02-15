@@ -1,0 +1,62 @@
+{{ header }}
+<div id="account-forgotten" class="navi">
+    <div class="wrap">
+        {% for breadcrumb in breadcrumbs %}
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+            {% if not loop.last %}<span></span>{% endif %}
+        {% endfor %}
+    </div>
+</div>
+<div class="login-page">
+    <div class="wrap">
+        <h1>{{ heading_title }}</h1>
+        <div class="top-text">
+            Введите адрес электронной почты и нажмите кнопку “далее”, чтобы получить пароль по электронной почте.
+        </div>
+        <form id="form-forgotten" action="{{ confirm }}" method="post" data-oc-toggle="ajax">
+
+                <label for="input-email-forgotten" class="col-form-label">{{ entry_email }}</label>
+                <div class="field">
+                    <input type="text" name="email" value="" placeholder="{{ entry_email }}" id="input-email-forgotten"
+                           required>
+                    <div id="error-email" class="invalid-feedback"></div>
+                </div>
+                <button onclick="window.location.href='{{ back }}'" class="button-back-forgotten">{{ button_back }}</button>
+                <button class="button-submit-forgotten" type="submit">Далее</button>
+        </form>
+    </div>
+</div>
+{# <div id="account-forgotten" class="container"> #}
+{#    <ul class="breadcrumb"> #}
+{#        {% for breadcrumb in breadcrumbs %} #}
+{#            <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li> #}
+{#        {% endfor %} #}
+{#    </ul> #}
+{#    <div class="row">{{ column_left }} #}
+{#        <div id="content" class="col">{{ content_top }} #}
+{#            <h1>{{ heading_title }}</h1> #}
+{#            <p>{{ text_email }}</p> #}
+{#            <form id="form-forgotten" action="{{ confirm }}" method="post" data-oc-toggle="ajax"> #}
+{#                <fieldset> #}
+{#                    <legend>{{ text_your_email }}</legend> #}
+{#                    <div class="row mb-3 required"> #}
+{#                        <label for="input-email" class="col-sm-2 col-form-label">{{ entry_email }}</label> #}
+{#                        <div class="col-sm-10"> #}
+{#                            <input type="text" name="email" value="" placeholder="{{ entry_email }}" id="input-email" class="form-control"/> #}
+{#                            <div id="error-email" class="invalid-feedback"></div> #}
+{#                        </div> #}
+{#                    </div> #}
+{#                </fieldset> #}
+{#                <div class="row"> #}
+{#                    <div class="col"> #}
+{#                        <a href="{{ back }}" class="btn btn-light">{{ button_back }}</a> #}
+{#                    </div> #}
+{#                    <div class="col text-end"> #}
+{#                        <button type="submit" class="btn btn-primary">{{ button_continue }}</button> #}
+{#                    </div> #}
+{#                </div> #}
+{#            </form> #}
+{#            {{ content_bottom }}</div> #}
+{#        {{ column_right }}</div> #}
+{# </div> #}
+{{ footer }}

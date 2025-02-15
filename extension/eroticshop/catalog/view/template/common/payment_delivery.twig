@@ -1,0 +1,72 @@
+{{ header }}
+
+<div class="navi">
+    <div class="wrap">
+    {% for breadcrumb in breadcrumbs %}
+        {% if not loop.last %}
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+            <span></span>{% endif %}
+        {% if loop.last %}
+            {{ breadcrumb.text }}
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+<div class="payment-delivery-page">
+    <div class="wrap">
+        <h1>Доставка и оплата товара</h1>
+        <div class="delivery">
+            <h2>Доставка</h2>
+            <div class="flex">
+                <div class="item">
+                    <div class="icon"><img src="/extension/eroticshop/catalog/view/img/delivery1.svg"></div>
+                    <p>Самовывоз</p>
+                    самовывоз из магазина по адресу: Суеркулова 28/2, в 3мкр. Бизнес центр "Колизей", Магазин находится в подвальном помещении
+                </div>
+                <div class="item">
+                    <div class="icon"><img src="/extension/eroticshop/catalog/view/img/delivery2.svg"></div>
+                    <p>Доставка по Бишкеку</p>
+                    По большинству районов бесплатная, если заказ свыше 2500 сом. При заказе меньше 2500 сом, производится доплата за удаленные районы! <br/>
+                    Время доставки - 2-3 часа. Заказы принимаются до 20:00. <br/>
+                    <a href="#">Удаленные районы</a>
+                </div>
+                <div class="item">
+                    <div class="icon"><img src="/extension/eroticshop/catalog/view/img/delivery3.svg"></div>
+                    <p>Доставка по Чуйской области.</p>
+                    Отправка курьером после 100% оплаты. Стоимость 250 сом. <br/>
+                    Доставка в регионы курьером после 100% оплаты. Стоимость от 300 сом. <br/>
+                    Сроки и детали уточняйте у менеджера.
+                </div>
+                <div class="item">
+                    <div class="icon"><img src="/extension/eroticshop/catalog/view/img/delivery4.svg"></div>
+                    <p>Анонимность при доставке</p>
+                    Ваш заказ доставляет курьер из курьерской службы. Курьер забирает готовый, упакованный в черный непрозрачный пакет заказ. Пакет обматывается скотчем. Курьер не знает, что внутри пакета! Соблюдаем полную анонимность.
+                </div>
+            </div>
+        </div>
+        <div class="payment">
+            <h2>Оплата товара</h2>
+            <div class="flex">
+                <div class="item">
+                    <img src="/extension/eroticshop/catalog/view/img/payment1.png">
+                    <p>0 (555) 060 900</p>
+                </div>
+                <div class="item">
+                    <img src="/extension/eroticshop/catalog/view/img/payment2.png">
+                    <p>9417 0185 6204 3158</p>
+                </div>
+                <div class="item">
+                    <img src="/extension/eroticshop/catalog/view/img/payment1.png">
+                    <p>0 (555) 060 900</p>
+                </div>
+                <div class="item">
+                    <img src="/extension/eroticshop/catalog/view/img/payment2.png">
+                    <p>9417 0185 6204 3158</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ footer }}

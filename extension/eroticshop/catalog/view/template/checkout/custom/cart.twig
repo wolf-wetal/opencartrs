@@ -1,0 +1,72 @@
+{% if products %}
+<form action="{{ action }}" method="post" enctype="multipart/form-data">
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+          <td>{{ column_name }}</td>
+          <td>{{ column_quantity }}</td>
+          <td>Стоимость</td>
+          <td></td>
+      </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+{#        <tr>
+            <td colspan="4">{{ column_name }}</td>
+        </tr>#}
+
+        <tr>
+
+          {% for column, name in setting.columns %}
+
+            {% if (column == 'name') %}
+                <td>
+                <div class="name">
+                    {% if product.thumb %}<div><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}"></div>{% endif %}
+                    <div>
+                        <p>{{ product.name }}</p>
+                        {{ product.model }}
+                    </div>
+                </div>
+           {% endif %}
+            {% if (column == 'quantity') %}
+                <td>
+                    <p class="n">Количество</p>
+                    <div class="number">
+                        <button title="{{ button_update }}" class="minus" type="button" onclick="custom_cart.update({{ product.cart_id }}, {{ product.quantity - 1 }})"></button>
+                        <label for="quantity[{{ product.cart_id }}]">
+                            <input id="quantity[{{ product.cart_id }}]" type="text"  oninput="custom_cart.change({{ product.cart_id }}, event)" name="quantity[{{ product.cart_id }}]" value="{{ product.quantity }}" size="1">
+                        </label> {#<input type="hidden" name="key" value="{{ product.cart_id }}">#}
+                        <button  title="{{ button_update }}" class="plus" type="button" onclick="custom_cart.update({{ product.cart_id }}, {{ product.quantity + 1 }})"></button>
+                    </div>
+                </td>
+            {% endif %}
+
+            {% if (column == 'total') %}
+                <td>
+                    <p class="n">Стоимость</p>
+                  {{ product.total }}
+                </td>
+            {% endif %}
+
+            {% if (column == 'remove') %} 
+              <td>
+                  <p class="n">Удалить</p>
+                 <button type="button" data-toggle="tooltip" title="{{ button_remove }}" class="delete" onclick="custom_cart.remove('{{ product.cart_id }}');"></button>
+              </td>
+            {% endif %} 
+
+          {% endfor %} 
+
+        </tr>
+        {% endfor %} 
+      </tbody>
+		</table>
+  </div>
+</form>
+{% endif %}
+
+<div class="result">
+    Итоговая сумма <span>{{ totals_summ }}</span>
+</div>

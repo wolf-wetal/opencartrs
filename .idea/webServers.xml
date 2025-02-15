@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="e809c791-ee7e-4049-961f-cff8554fa105" name="s1.shared.host.kg" url="http://s1.shared.host.kg">
+        <fileTransfer rootFolder="/www/dev2.eroticshop.kg" host="s1.shared.host.kg" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

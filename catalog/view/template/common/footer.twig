@@ -1,0 +1,240 @@
+</main>
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <h5>{{ text_information }}</h5>
+        <ul class="list-unstyled">
+          {% for information in informations %}
+            <li><a href="{{ information.href }}">{{ information.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-sm-3">
+        <h5>{{ text_service }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ contact }}">{{ text_contact }}</a></li>
+          <li><a href="{{ return }}">{{ text_return }}</a></li>
+          {% if gdpr %}
+            <li><a href="{{ gdpr }}">{{ text_gdpr }}</a></li>
+          {% endif %}
+          <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-3">
+        <h5>{{ text_extra }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ manufacturer }}">{{ text_manufacturer }}</a></li>
+          <li><a href="{{ voucher }}">{{ text_voucher }}</a></li>
+          {% if affiliate %}
+            <li><a href="{{ affiliate }}">{{ text_affiliate }}</a></li>
+          {% endif %}
+          <li><a href="{{ special }}">{{ text_special }}</a></li>
+          {# <li><a href="{{ blog }}">{{ text_blog }}</a></li> #}
+        </ul>
+      </div>
+      <div class="col-sm-3">
+        <h5>{{ text_account }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ account }}">{{ text_account }}</a></li>
+          <li><a href="{{ order }}">{{ text_order }}</a></li>
+          <li><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
+          <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <p>{{ powered }}</p>
+    <!--
+OpenCart is open source software and you are free to remove the powered by OpenCart if you want, but its generally accepted practise to make a small donation.
+Please donate via PayPal to donate@opencart.com
+//-->
+  </div>
+</footer>
+{{ cookie }}
+
+<script type="text/javascript">
+  var live_search = {
+    selector: '#search input[name=\'search\']',
+    text_no_matches: '{{ text_empty }}',
+    height: '50px'
+  }
+
+  $(document).ready(function() {
+    var html = '';
+    html += '<div class="live-search">';
+    html += '	<ul>';
+    html += '	</ul>';
+    html += '<div class="result-text"></div>';
+    html += '</div>';
+
+    //$(live_search.selector).parent().closest('div').after(html);
+    $(live_search.selector).after(html);
+
+    $(live_search.selector).autocomplete({
+      'source': function(request, response) {
+        var filter_name = $(live_search.selector).val();
+        var cat_id = 0;
+        //var module_wd_live_search_min_length = '{{ module_wd_live_search_min_length|abs }}';
+        if (filter_name.length < 2) {
+          $('.live-search').css('display','none');
+          $('body').removeClass('search-open');
+        }
+        else{
+          var html = '';
+          html += '<li style="text-align: center;height:10px;">';
+          html +=	'<img class="loading" src="image/catalog/loading.gif" />';
+          html +=	'</li>';
+          $('.live-search ul').html(html);
+          $('.live-search').css('display','block');
+          $('body').addClass('search-open');
+
+          $.ajax({
+            url: 'index.php?route=product/live_search&filter_search=' +  encodeURIComponent(filter_name),
+            dataType: 'json',
+            success: function(result) {
+              var products = result.products;
+              $('.live-search ul li').remove();
+              $('.result-text').html('');
+              if (!$.isEmptyObject(products)) {
+                $('.result-text').html('<a href="{{ module_live_search_href }}'+filter_name+'" class="view-all-results">Показать все ('+result.total+')</a>');
+
+                $.each(products, function(index,product) {
+                  var html = '';
+
+                  html += '<li>';
+                  html += '<a href="' + product.url + '" title="' + product.name + '">';
+
+                  html += '	<div class="product-image col-sm-3 col-xs-4"><img alt="' + product.name + '" src="' + product.image + '"></div>';
+                  html += '<span style="clear:both"></span>';
+                  html += '</a>';
+                  html += '</li>';
+                  $('.live-search ul').append(html);
+                });
+              } else {
+                var html = '';
+                html += '<li style="text-align: center;height:10px;">';
+                html +=	live_search.text_no_matches;
+                html +=	'</li>';
+
+                $('.live-search ul').html(html);
+              }
+              $('.live-search').css('display','block');
+              $('body').addClass('search-open');
+              return false;
+            }
+          });
+        }
+      },
+      'select': function(product) {
+        $(live_search.selector).val(product.name);
+      }
+    });
+
+    $(document).bind( "mouseup touchend", function(e){
+      var container = $('.live-search');
+      if (!container.is(e.target) && container.has(e.target).length === 0)
+      {
+        container.hide();
+      }
+    });
+  });
+</script>
+
+<script src="{{ bootstrap }}" type="text/javascript"></script>
+{% for script in scripts %}
+  <script src="{{ script.href }}" type="text/javascript"></script>
+{% endfor %}
+{#<script type="text/javascript">
+  $(document).ready(function () {
+
+    var html = '';
+    html += '<ul class="live-search-results">';
+    html += '</ul>';
+
+    $('#search').append(html);
+
+    $('#search button').on('click', function () {
+      var filter_name = $('#search input[name=\'search\']').val();
+      if (filter_name.length < 2) {
+        $('.live-search-results').empty();
+        return;
+      }
+
+      $.ajax({
+        url: 'index.php?route=product/live_search&filter_search=' + encodeURIComponent(filter_name),
+        dataType: 'json',
+        beforeSend: function () {
+          $('.live-search-results').html('<li style="text-align: center;height:10px;"><img class="loading" src="image/catalog/loading.gif" /></li>');
+        },
+        success: function (result) {
+          var products = result.products;
+          $('.live-search-results').empty();
+          if (!$.isEmptyObject(products)) {
+            $('.live-search-results').append('<li><a href="{{ module_live_search_href }}' + filter_name + '" class="view-all-results">Показать все результаты (' + result.total + ')</a></li>');
+
+            $.each(products, function (index, product) {
+              var html = '';
+
+              html += '<li>';
+              html += '<a href="' + product.url + '" title="' + product.name + '">' + product.name + '</a>';
+              html += '</li>';
+              $('.live-search-results').append(html);
+            });
+          } else {
+            $('.live-search-results').html('<li style="text-align: center;height:10px;">К сожалению ничего не найдено</li>');
+          }
+        }
+      });
+    });
+
+    $(document).on("mouseup touchend", function (e) {
+      var container = $('#search');
+      if (!container.is(e.target) && container.has(e.target).length === 0) {
+        $('.live-search-results').empty();
+      }
+    });
+  });
+</script>#}
+{#<script type="text/javascript">
+  $('#search input[name=\'search\']').on('keyup', function () {
+    clearTimeout($(this).data('timer'));
+    $(this).data('timer', setTimeout(function () {
+      var filter_name = $('#search input[name=\'search\']').val();
+      if (filter_name.length < 2) {
+        $('.live-search-results').empty();
+        return;
+      }
+
+      $.ajax({
+        url: 'index.php?route=product/live_search&filter_search=' + encodeURIComponent(filter_name),
+        dataType: 'json',
+        beforeSend: function () {
+          $('.live-search-results').html('<li style="text-align: center;height:10px;"><img class="loading" src="image/catalog/loading.gif" /></li>');
+        },
+        success: function (result) {
+          var products = result.products;
+          $('.live-search-results').empty();
+          if (!$.isEmptyObject(products)) {
+            $('.live-search-results').append('<li><a href="{{ module_live_search_href }}' + filter_name + '" class="view-all-results">Показать все результаты (' + result.total + ')</a></li>');
+
+            $.each(products, function (index, product) {
+              var html = '';
+
+              html += '<li>';
+              html += '<a href="' + product.url + '" title="' + product.name + '">' + product.name + '</a>';
+              html += '</li>';
+              $('.live-search-results').append(html);
+            });
+          } else {
+            $('.live-search-results').html('<li style="text-align: center;height:10px;">К сожалению ничего не найдено</li>');
+          }
+        }
+      });
+    }, 500)); // задержка в миллисекундах
+  });
+</script>#}
+
+
+
+</body></html>

@@ -1,0 +1,55 @@
+<div class="fields" id="custom-payment">
+  <h3>Выберите способ оплаты</h3>
+  <div class="select">
+
+    {% if (error_warning) %} 
+    <div class="alert alert-warning"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
+    {% endif %} 
+
+    {% if (payment_methods) %} 
+    {% for payment_method in payment_methods %} 
+
+        {% if (payment_method['code'] == code or not code) %} 
+        {% set code = payment_method['code'] %} 
+        <input type="radio" class="radio" name="payment_method" value="{{ payment_method['code'] }}" id="{{ payment_method['code'] }}" checked="checked" />
+        {% else %} 
+        <input type="radio" class="radio" name="payment_method" value="{{ payment_method['code'] }}" id="{{ payment_method['code'] }}" />
+        {% endif %}
+      {% if (payment_method['code'] == 'free_checkout') %}
+      <label for="{{ payment_method['code'] }}">
+        <span>Наличные</span>
+        По приезду курьера Вы распаковываете товар, проверяете его качество, по желанию, прикладываете на одежду. После этого Вы поймете, подходит Вам или нет. Если у Вас сомнения, Вы в праве отказаться, однако будет необходимо оплатить привоз. Оплата наличными курьеру.
+      </label>
+      {% elseif (payment_method['code'] == 'cod') %}
+        <label for="{{ payment_method['code'] }}">
+          <span>Элсом</span>
+          Предоплата на кошелёк 0555 060900. Гарантия получения заказа 100%.
+        </label>
+      {% endif %}
+
+    {% endfor %} 
+    {% endif %} 
+
+    
+    <script>
+        $(function(){
+
+            let customer_group_id = {{ customer_group_id }};
+
+            if ( $('#custom-customer input[name=\'customer_group_id\']:checked').val() !== undefined ) {
+                customer_group_id = $('#custom-customer input[name=\'customer_group_id\']:checked').val();
+            }
+
+            custom_block.payment( customer_group_id );
+            
+        });
+    </script>
+
+  </div>
+  <div class="data">
+    <p>элсом 0555060900</p>
+    <p>элкарт 9417 0185 6204 3158</p>
+    <p>МБАНК 0555060900</p>
+    <p>OPTIMA 4169 5853 5877 6093</p>
+  </div>
+</div>

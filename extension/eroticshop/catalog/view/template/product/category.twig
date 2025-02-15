@@ -1,0 +1,230 @@
+{{ header }}
+<div class="catalog-page">
+    {% if image_category or description %}
+        {% if image_category %}
+            <div class="top-block" style="background: url('{{ image_category }}')  center/cover;">
+                <div class="wrap">
+                    <h1>{{ heading_title }}</h1>
+                    {% if description %}
+                        <p>{{ description }}</p>
+                    {% endif %}
+                </div>
+                <div class="mob-image">
+                    <img src="{{ image_category }}" alt="{{ heading_title }}" title="{{ heading_title }}">
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    {#    <div class="navi"> #}
+    {#        <a href="#">Главная</a> <span></span> Новинки #}
+    {#    </div> #}
+
+
+    <div class="wrap">
+        <div class="navi">
+            {% for breadcrumb in breadcrumbs %}
+                {% if loop.last %}
+                    {{ breadcrumb.text }}
+                {% else %}
+                    <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a><span></span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if categories %}
+            <div class="categories flex2">
+                {% for category in categories %}
+                    <div class="item">
+                        <a href="{{ category.href }}">
+                            <div class="info">
+                                <div><img src="{{ category.icon_category }}"></div>
+                                <div><div class="name-category-nw">{{ category.name }}</div></div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <h2>{{ heading_title }}</h2>
+
+        {% if products %}
+        <button class="filter-button">Фильтр</button>
+        <div class="flex">
+            <div class="filter">
+                <div class="name">
+                    Цена
+                </div>
+                <div class="price-select">
+                    <div id="slider-range-max"></div>
+                    <input type="text" id="amount" readonly>
+                </div>
+{#                <div class="name">
+                    Другое
+                </div>#}
+{#                <div class="select">
+                    <input type="checkbox" class="checkbox" id="ch1"><label for="ch1">По имени (А-Я)</label>
+                    <input type="checkbox" class="checkbox" id="ch2"><label for="ch2">По имени (Я-А)</label>
+                </div>#}
+                <div class="button">
+                    <button id="clear_filter">Очистить</button>
+                </div>
+            </div>
+            <div class="items">
+                <div class="list flex product-layout">
+                    {% for product in products %}
+                        {{ product }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 text-start">{{ pagination }}</div>
+        <div class="col-sm-6 text-end">{{ results }}</div>
+    </div>
+        <div class="wrap">
+            <div class="button" style="text-align: center;">
+                <button id="show-more-button" style="display:none;" class="btn-show-product">Показать еще</button>
+                <div id="loading-indicator" class="loading-indicator" style="display: none;">
+                    <div class="spinner"></div>
+                    Загрузка...
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+</div>
+{{ popup_cart }}
+
+
+{#<div id="loading-indicator" class="loading-indicator" style="display: none;">
+    <div class="spinner"></div>
+    Загрузка...
+</div>#}
+
+
+<script src="{{ scrollHandler }}" type="text/javascript"></script>
+{#<script type="text/javascript">#}
+{#    $( function() {#}
+{#        $( "#slider-range-max" ).slider({#}
+{#            range: "max",#}
+{#            min: {{ minPrice }},#}
+{#            max: {{ maxPrice }},#}
+{#            value: {{ valuePrice }},#}
+{#            slide: function( event, ui ) {#}
+{#                $( "#amount" ).val( ui.value + " сом");#}
+{#            }#}
+{#        });#}
+{#        $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) + " сом" );#}
+{#    } );#}
+{#</script>#}
+
+<script type="text/javascript">
+    $(function() {
+        let slider = $("#slider-range-max");
+        const urlParams = new URLSearchParams(window.location.search);
+
+        slider.slider({
+            range: "max",
+            min: {{ minPrice }},
+            max: {{ maxPrice }},
+            value: urlParams.get('filter_value_price') ?? {{ valuePrice }},
+            slide: function(event, ui) {
+                $("#amount").val(ui.value + " сом");
+            },
+            change: function(event, ui) {
+                let url = new URL(window.location.href),
+                    newPrice = ui.value;
+                // Показываем элемент загрузки перед отправкой запроса
+                $("#loading-indicator").show();
+                url.searchParams.set('path', {{ category_path }});
+                url.searchParams.set('filter_value_price', encodeURIComponent(newPrice));
+                url.searchParams.set('page', encodeURIComponent(1));
+                // Отправляем асинхронный запрос на сервер с новым значением цены
+                $.ajax({
+                    url: 'index.php?route=product/category&path={{ category_path }}&filter_value_price=' + encodeURIComponent(newPrice), // Укажите путь к вашему обработчику PHP
+                    type: 'GET',
+                    success: function(response) {
+                        let $newContent = $(response).find('.product-layout');
+
+                        // Если контейнер отсутствует, восстанавливаем его
+                        if ($('.product-layout').length === 0) {
+                            $('.row:last').append('<div class="product-layout"></div>');
+                        }
+
+                        if ($newContent.length) {
+                            $('.product-layout').replaceWith($newContent);
+                        } else {
+                            $('.product-layout').empty(); // Очищаем контейнер, если результат пустой
+                        }
+
+                        $("#loading-indicator").hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        $("#loading-indicator").hide();
+                    }
+                });
+
+                history.pushState(null, null, url);
+            }
+        });
+
+        $("#amount").val(slider.slider("value") + " сом");
+
+        $('#clear_filter').on('click', function() {
+            const currentUrl = window.location.href;
+            window.location.href = currentUrl.split('&')[0];
+        });
+    });
+
+</script>
+
+{#<script type="text/javascript">
+    $(function() {
+        $('#slider-range-max').slider({
+            range: "max",
+            min: {{ minPrice }},
+            max: {{ maxPrice }},
+            value: {{ valuePrice }},
+            slide: function(event, ui) {
+                $("#amount").val(ui.value + " сом");
+            },
+            change: function(event, ui) {
+                var minPrice = $('#slider-range-max').slider("values", 0);
+                var maxPrice = $('#slider-range-max').slider("values", 1);
+
+                loadProducts(minPrice, maxPrice);
+            }
+        });
+        $("#amount").val($("#slider-range-max").slider("value") + " сом");
+
+        function loadProducts(minPrice, maxPrice) {
+            $('#loading-indicator').show(); // Показываем индикатор загрузки
+
+            // Отправляем AJAX запрос для загрузки товаров с учетом новых параметров цены
+            $.ajax({
+                url: 'index.php?route=product/category', // Замените на ваш адрес обработчика AJAX запроса
+                type: 'get',
+                data: {
+                    max_price: maxPrice
+                },
+                dataType: 'html',
+                success: function(response) {
+                    // Обновляем содержимое товаров на странице
+                    $('#product-list').html(response);
+                    $('#loading-indicator').hide(); // Скрываем индикатор загрузки после завершения запроса
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log('AJAX request error: ' + thrownError); // Обрабатываем возможную ошибку AJAX запроса
+                    $('#loading-indicator').hide(); // Скрываем индикатор загрузки в случае ошибки
+                }
+            });
+        }
+    });
+</script>#}
+
+
+
+{{ footer }}

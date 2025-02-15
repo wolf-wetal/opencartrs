@@ -1,0 +1,39 @@
+{{ header }}
+<div id="common-success" class="wrap">
+  <div class="navi" style="display:none;">
+    {% for breadcrumb in breadcrumbs %}
+      <a href="javascript:void(0);">{{ breadcrumb.text }}</a>
+      {% if not loop.last %}<span></span>{% endif %}
+    {% endfor %}
+  </div>
+  <div style="margin: 0 0 27px 0;"></div>
+  <div class="popup">
+    <div class="success">
+      <div class="name">
+        🥳Поздравляем !
+      </div>
+      <p>Вы успешно оформили заказ! <br/>Вам перезвонят в течение часа</p>
+      <a href="{{ continue }}">На главную</a>
+    </div>
+  </div>
+
+  <div style="margin: 0 0 27px 0;"></div>
+
+</div>
+
+
+{#<div id="common-success" class="container">#}
+{#  <ul class="breadcrumb">#}
+{#    {% for breadcrumb in breadcrumbs %}#}
+{#      <li class="breadcrumb-item"><a href="javascript;;">{{ breadcrumb.text }}</a></li>#}
+{#    {% endfor %}#}
+{#  </ul>#}
+{#  <div class="row">{{ column_left }}#}
+{#    <div id="content" class="col">{{ content_top }}#}
+{#      <h1>{{ heading_title }}111</h1>#}
+{#      {{ text_message }}222#}
+{#      <div class="text-end"><a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a></div>#}
+{#      {{ content_bottom }}333</div>#}
+{#    {{ column_right }}44</div>#}
+{#</div>#}
+{{ footer }}

@@ -1,0 +1,79 @@
+{{ header }}
+
+<div class="navi">
+    <div class="wrap">
+        {% for breadcrumb in breadcrumbs %}
+            {% if not loop.last %}
+                <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+                <span></span>{% endif %}
+            {% if loop.last %}
+                {{ breadcrumb.text }}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<main class="main">
+    <div class="contacts-page">
+        <div class="container">
+            <h1>АДРЕС МАГАЗИНА </h1>
+            <div class="map">
+                <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A3d18b13f72d36678591d98dbab6f543913c54b9867dff10ce7aa19dd1285a2c9&amp;source=constructor" width="100%" height="400" frameborder="0"></iframe>
+            </div>
+                <br/>
+            <br/>
+            <div class="payment-delivery-page">
+                <div class="payment">
+                    <h2>Проложить маршрут в:</h2>
+                    <div class="flex">
+
+                        <div class="item">
+                            <a href="https://yandex.ru/maps/-/CDCW7NnA" target="_blank">
+                                <img src="/extension/eroticshop/catalog/view/img/yandexMap.svg">
+                                <p>Яндекс карты</p>
+                            </a>
+                        </div>
+
+                        <div class="item">
+                            <a href="https://go.2gis.com/ypfb0" target="_blank">
+                                <img src="/extension/eroticshop/catalog/view/img/2gis.png">
+                                <p>2 ГИС</p>
+                            </a>
+                        </div>
+                        <div class="item">
+                            <a href="https://maps.app.goo.gl/JhS6ZefxHpFovKye7" target="_blank">
+                                <img src="/extension/eroticshop/catalog/view/img/googleMaps.png">
+                                <p>Гугл карты</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list row">
+                <div class="col-xl-3 col-md-6">
+                    <div class="item color1">
+                            <h6 class="contacts-item-title">Адрес:</h6>
+                        Суеркулова 28/2, в 3мкр. Бизнес центр "Колизей".
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="item color1">
+                        <h6 class="contacts-item-title">Режим работы:</h6>
+                        пн-пт <br/>с 10:00 до 21:00
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="item color1">
+                        <h6 class="contacts-item-title">Контакты:</h6>
+                        <a href="tel:+996555060900">0 (555) 06 09 90</a>
+                        <br/>
+                        <a href="tel:+996501060900">0(501) 06 09 00</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{{ footer }}

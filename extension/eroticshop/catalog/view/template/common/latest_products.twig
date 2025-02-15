@@ -1,0 +1,64 @@
+{% if products %}
+<div class="index-catalog-block">
+    <div class="wrap">
+        <div class="flex-old">
+             <h2>Новинки</h2>
+            <a href="{{ url_novinki }}" class="top-link">Смотреть все</a>
+        </div>
+        <div class="list">
+            {% for product in products %}
+
+                    <div class="item">
+                        <a href="{{ product.href }}">
+                        <div class="image">
+
+                            <img src="{{ product.thumb }}" {{ product.additional_image ? 'data-additional="'~product.additional_image~'"' }} alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" />
+                        </div>
+                        <div class="name">
+                            {{ product_id }}
+                            {{ product.name }}
+                        </div>
+                        </a>
+                        {% if product.price %}
+                            {% if product.special %}
+                                <div class="flex">
+                                    <div class="price div-price">
+                                        <span class="price-old">{{ product.price }}</span>
+                                        <div class="price-new">
+                                            {{ product.special }}
+                                        </div>
+                                    </div>
+                                    <form method="post" data-oc-toggle="ajax" data-oc-load="{{ product.cart }}" data-oc-target="#header-cart">
+                                        <button class="addToCartButton" type="submit" formaction="{{ add_to_cart }}" name="product_{{ product.product_id }}"  data-bs-toggle="tooltip" data-name="{{ product.name }}" data-image="{{ product.thumb }}" data-sku="{{ product.sku }}">В корзину</button>
+                                        <input type="hidden" name="product_id" value="{{ product.product_id }}"/> <input type="hidden" name="quantity" value="1"/>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div class="flex">
+                                    <div class="price">
+                                        {{ product.price }}
+                                    </div>
+                                    <form method="post" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#header-cart">
+                                        <button class="addToCartButton" type="submit" formaction="{{ add_to_cart }}" name="product_{{ product.product_id }}"  data-bs-toggle="tooltip" data-name="{{ product.name }}" data-image="{{ product.thumb }}" data-sku="{{ product.sku }}">В корзину</button>
+                                        <input type="hidden" name="product_id" value="{{ product.product_id }}"/> <input type="hidden" name="quantity" value="1"/>
+                                    </form>
+
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+    {#                    <div class="price">
+                            {{ product.price }}
+                        </div>
+                        <form method="post" data-oc-toggle="ajax" data-oc-load="{{ cart }}" data-oc-target="#header-cart">
+                            <button class="addToCartButton" type="submit" formaction="{{ add_to_cart }}" name="product_{{ product.product_id }}"  data-bs-toggle="tooltip" data-name="{{ product.name }}" data-image="{{ product.thumb }}" data-sku="{{ product.sku }}">Добавить в корзину</button>
+                            <input type="hidden" name="product_id" value="{{ product.product_id }}"/> <input type="hidden" name="quantity" value="1"/>
+                        </form>#}
+                    </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+ </div>
+{% endif %}

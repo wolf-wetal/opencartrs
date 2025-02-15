@@ -1,0 +1,44 @@
+{{ header }}
+
+
+{#  {% if success %}
+      <div class="alert alert-success alert-dismissible"><i class="fa-solid fa-circle-check"></i> {{ success }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+  {% endif %}
+  {% if error_warning %}
+      <div>ASSA</div>
+      <div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ error_warning }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+  {% endif %}#}
+<div id="account-forgotten" class="navi">
+    <div class="wrap">
+        {% for breadcrumb in breadcrumbs %}
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+            {% if not loop.last %}<span></span>{% endif %}
+        {% endfor %}
+    </div>
+</div>
+<div class="login-page">
+    <div class="wrap">
+        <h1>Вход в личный кабинет</h1>
+        <form id="form-login" action="{{ login }}" method="post" data-oc-toggle="ajax">
+            <div class="field">
+                <label for="input-email-login" class="col-form-label">{{ entry_email }}</label>
+                <input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email-login" required>
+            </div>
+            <div class="field">
+                <label for="input-password-login" class="col-form-label">{{ entry_password }}</label>
+                <input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password-login" required>
+                <a class="eye password-control"></a>
+            </div>
+            <a href="{{ forgotten }}" class="forget-link">Забыли пароль?</a>
+            <div id="alert" class=""></div>
+            <button type="submit" >{{ button_login }}</button>
+            <div class="bottom-link">
+                <a href="{{ register }}">Регистрация</a>
+            </div>
+            {% if redirect %}
+                <input type="hidden" name="redirect" value="{{ redirect }}"/>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{{ footer }}

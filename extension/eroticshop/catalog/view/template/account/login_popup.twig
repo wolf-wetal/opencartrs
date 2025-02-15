@@ -1,0 +1,20 @@
+<div class="popup" id="popup_login" style="display: none; width: 100%; max-width: 550px;">
+    <div class="login-page">
+        <h1>Вход в личный кабинет</h1>
+        <form id="form-login-popup" action="{{ login }}" method="post" data-oc-toggle="ajax">
+            <div class="field">
+                <input type="text" id="input-email" name="email" value="{{ email }}" placeholder="Введите почту" required>
+            </div>
+            <div class="field">
+                <input type="password" name="password" value="{{ password }}" id="input-password" placeholder="Введите пароль" required>
+                <a class="eye password-control"></a>
+            </div>
+            <a href="{{ forgotten }}" class="forget-link">Забыли пароль?</a>
+            <div id="alert-popup" class=""></div>
+            <button type="submit">Войти</button>
+            <div class="bottom-link">
+                <a href="{{ register }}">Регистрация</a>
+            </div>
+        </form>
+    </div>
+</div>

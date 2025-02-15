@@ -1,0 +1,51 @@
+<table>
+    <thead>
+    <tr>
+        <td>{{ column_name }}</td>
+        <td>{{ column_quantity }}</td>
+        <td>Стоимость</td>
+        <td></td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for product in products %}
+        <tr>
+            <td colspan="4">{{ column_name }}</td>
+        </tr>
+        <tr>
+            <td>
+                <div class="name">
+                    {% if product.thumb %}<div><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}"></div>{% endif %}
+                    <div>
+                        <p>{{ product.name }}</p>
+                        {{ product.model }}
+                    </div>
+                </div>
+            </td>
+            <td>
+                    <p class="n">Количество</p>
+                    <form method="post" data-oc-target="#shopping-cart">
+                        <div class="number">
+                            <button type="submit" formaction="{{ product_edit_minus }}" data-bs-toggle="tooltip" title="{{ button_update }}" class="minus"></button>
+                            <input type="text" name="quantity" value="{{ product.quantity }}" size="1" class="form-control"> <input type="hidden" name="key" value="{{ product.cart_id }}">
+                            <button type="submit" formaction="{{ product_edit_plus }}" data-bs-toggle="tooltip" title="{{ button_update }}" class="plus"></button>
+                        </div>
+                    </form>
+                </td>
+                <td>
+                    <p class="n">Стоимость</p>
+                    {{ product.total }}
+                </td>
+                <td>
+                    <form method="post" data-oc-target="#shopping-cart">
+                        <input type="hidden" name="key" value="{{ product.cart_id }}">
+                    <button type="submit" formaction="{{ product_remove }}" data-bs-toggle="tooltip" title="{{ button_remove }}" class="delete"></button>
+                    </form>
+                </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="result">
+    Итоговая сумма <span>{{ totals_summ }}</span>
+</div>

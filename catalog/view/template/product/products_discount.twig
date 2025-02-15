@@ -1,0 +1,148 @@
+{{ header }}
+<div class="catalog-page">
+    {#    {% if image_category or description %}
+        {% if image_category %}
+            <div class="top-block" style="background: url('{{ image_category }}')  center/cover;">
+                <div class="wrap">
+                    <h1>{{ heading_title }}</h1>
+                    {% if description %}
+                        <p>{{ description }}</p>
+                    {% endif %}
+                </div>
+                <div class="mob-image">
+                    <img src="{{ image_category }}" alt="{{ heading_title }}" title="{{ heading_title }}">
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}#}
+
+        <div class="navi">
+            <a href="#">Главная</a> <span></span> Новинки
+        </div>
+
+
+    <div class="wrap">
+        <div class="navi">
+            {% for breadcrumb in breadcrumbs %}
+                <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+                {% if not loop.last %}<span></span>{% endif %}
+            {% endfor %}
+        </div>
+        <h2>{{ heading_title }}</h2>
+
+        {% if products %}
+        <button class="filter-button">Фильтр</button>
+        <div class="flex">
+            <div class="filter">
+                <div class="name">
+                    Цена
+                </div>
+                <div class="price-select">
+                    <div id="slider-range-max"></div>
+                    <input type="text" id="amount" readonly>
+                </div>
+                {#                <div class="name">
+                    Другое
+                </div>#}
+                {#                <div class="select">
+                    <input type="checkbox" class="checkbox" id="ch1"><label for="ch1">По имени (А-Я)</label>
+                    <input type="checkbox" class="checkbox" id="ch2"><label for="ch2">По имени (Я-А)</label>
+                </div>#}
+                <div class="button">
+                    <button id="clear_filter">Очистить</button>
+                </div>
+            </div>
+            <div class="items">
+                <div class="list flex product-layout">
+                    {% for product in products %}
+                        {{ product }}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 text-start">{{ pagination }}</div>
+        <div class="col-sm-6 text-end">{{ results }}</div>
+    </div>
+
+
+    {% endif %}
+</div>
+<div id="loading-indicator" class="loading-indicator" style="display: none;">
+    <div class="spinner"></div>
+    Загрузка...
+</div>
+
+
+<script src="{{ scrollHandler }}" type="text/javascript"></script>
+{#<script type="text/javascript">#}
+{#    $( function() {#}
+{#        $( "#slider-range-max" ).slider({#}
+{#            range: "max",#}
+{#            min: {{ minPrice }},#}
+{#            max: {{ maxPrice }},#}
+{#            value: {{ valuePrice }},#}
+{#            slide: function( event, ui ) {#}
+{#                $( "#amount" ).val( ui.value + " сом");#}
+{#            }#}
+{#        });#}
+{#        $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) + " сом" );#}
+{#    } );#}
+{#</script>#}
+
+<script type="text/javascript">
+    $(function() {
+        let slider = $("#slider-range-max");
+
+        slider.slider({
+            range: "max",
+            min: {{ minPrice }},
+            max: {{ maxPrice }},
+            value: {{ valuePrice }},
+            slide: function(event, ui) {
+                $("#amount").val(ui.value + " сом");
+            },
+            change: function(event, ui) {
+                let url = new URL(window.location.href),
+                    newPrice = ui.value;
+                // Показываем элемент загрузки перед отправкой запроса
+                $("#loading-indicator").show();
+                url.searchParams.set('path', {{ category_path }});
+                url.searchParams.set('filter_value_price', encodeURIComponent(newPrice));
+
+                $.ajax({
+                    url: 'index.php?route=product/products_discount&filter_value_price=' + encodeURIComponent(newPrice), // Укажите путь к вашему обработчику PHP
+                    type: 'GET',
+                    success: function(response) {
+
+                        $('.product-layout').replaceWith($(response).find('.product-layout'));
+
+
+                        $("#loading-indicator").hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+
+                        $("#loading-indicator").hide();
+                    }
+                });
+
+                history.pushState(null, null, url);
+            }
+        });
+
+        $("#amount").val(slider.slider("value") + " сом");
+        $('#clear_filter').on('click', function() {
+            // Получаем текущий URL страницы
+            const currentUrl = window.location.href;
+            // Перенаправляем на новый URL
+            window.location.href = currentUrl.split('?')[0];
+        });
+
+
+    });
+</script>
+
+{{ footer }}
