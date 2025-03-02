@@ -37,6 +37,7 @@ class Standard extends \Opencart\System\Engine\Controller
             'product/search',
             'product/advantages_block',
             'account/login_popup',
+            'account/login_popup.login',
             'account/register',
             'account/login',
             'account/forgotten',
