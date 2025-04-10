@@ -51,6 +51,7 @@ class Header extends \Opencart\System\Engine\Controller {
 		$data['icons'] = 'catalog/view/stylesheet/fonts/fontawesome/css/all.min.css';
 		$data['stylesheet'] = 'catalog/view/stylesheet/stylesheet.css';
 
+
 		$data['slick_min'] = 'extension/eroticshop/catalog/view/js/slick.min.js';
 		$data['common_ext'] = 'extension/eroticshop/catalog/view/js/common.js';
 		$data['common_cat'] = 'catalog/view/javascript/common.js';
@@ -66,6 +67,7 @@ class Header extends \Opencart\System\Engine\Controller {
 		$data['slick_ext'] = 'extension/eroticshop/catalog/view/stylesheet/slick.css';
         $data['fancybox_min'] = 'extension/eroticshop/catalog/view/stylesheet/fancybox.min.css';
         $data['jquery_ui_css'] = 'extension/eroticshop/catalog/view/stylesheet/jquery-ui.css';
+        $data['custom'] = 'extension/eroticshop/catalog/view/stylesheet/custom.css';
 
 		// Hard coding scripts so they can be replaced via the event's system.
 		$data['jquery'] = 'catalog/view/javascript/jquery/jquery-3.7.1.min.js';

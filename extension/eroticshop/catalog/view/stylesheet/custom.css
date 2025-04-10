@@ -1,0 +1,27 @@
+.index-steps-block .list .item .icon {
+    margin: 20px auto;
+    width: 110px;
+    height: 110px;
+}
+
+.index-steps-block .list .item .icon img {
+    padding: 25%;
+}
+
+.item {
+    text-align: center;
+}
+
+.payment-delivery-page .delivery .item .icon { 
+    margin: 20px auto;
+    width: 87px;
+    height: 87px;
+}
+
+.payment-delivery-page .delivery .item .icon img {
+    padding: 35%;
+}
+
+.header-cart__total-items {
+    right: 0;
+}
